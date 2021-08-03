@@ -1,21 +1,20 @@
 apiVersion: sources.eventing.knative.dev/v1alpha1
-kind: ContainerSource
+kind: GitHubSource
 metadata:
   namespace: tekton-dream
   name: demo-event-source
 spec:
-  template:
-    spec:
-      containers:
-        - image: "github.com/iancoffey/brokers-tekton/cmd/sendevent"
-          name: demo-event
-          args:
-            - "--event-type"
-            - "com.github.push"
-            - "--source"
-            - "iancoffey/ulmaceae"
-            - "--data"
-            - "{\"repo\": \"iancoffey/ulmaceae\", \"sha\": \"6c81db31fcebb28cd60af3c715f83ad6d5a81d50\"}"
+  eventTypes:
+    - pull_request
+  ownerAndRepository: mmitrasarkar/expense-share-app
+  accessToken:
+    secretKeyRef:
+      name: githubsecret
+      key: accessToken
+  secretToken:
+    secretKeyRef:
+      name: githubsecret
+      key: secretToken
   sink:
     apiVersion: eventing.knative.dev/v1alpha1
     kind: Broker
